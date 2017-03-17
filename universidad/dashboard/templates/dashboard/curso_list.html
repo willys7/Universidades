@@ -1,0 +1,11 @@
+<h1>Books CBV</h1>
+<ul>
+    {% for curso in object_list %}
+    <li>{{ curso.nombre }}  ({{ curso.numero_alumnos }} No.Alumnos) ({{ curso.fecha }} fecha) ({{ curso.codigo }} codigo)
+    <a href="{% url 'dashboard:curso_edit' curso.codigo %}">edit</a>
+    <a href="{% url 'dashboard:curso_delete' curso.codigo %}">delete</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'dashboard:curso_new' %}">New</a>
