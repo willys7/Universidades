@@ -34,12 +34,12 @@ class AlumnoList(ListView):
 
 class AlumnoCreate(CreateView):
     model = Alumno
-    fields = ['nombre', 'numero_alumnos','fecha','codigo']
+    fields = ['nombre', 'carnet','edad','cursos','carrera']
     success_url = reverse_lazy('dashboard:alumno_list')
 
 class AlumnoUpdate(UpdateView):
     model = Alumno
-    fields = ['nombre', 'numero_alumnos','fecha','codigo']
+    fields = ['nombre', 'carnet','edad','cursos','carrera']
     success_url = reverse_lazy('dashboard:alumno_list')
 
 class AlumnoDelete(DeleteView):
