@@ -3,7 +3,7 @@
     {% for alumno in alumnos %}
     <li>{{ alumno.nombre }} ({{ alumno.carnet }} carnet) ({{ alumno.edad }} edad) ({{ alumno.carrera }} carrera)
     <a href="{% url 'dashboard:alumno_edit' alumno.carnet %}">Editar</a>
-    
+    <a href="{% url 'dashboard:alumno_delete' alumno.carnet %}">Eliminar</a>
     </li>
     {% endfor %}
 </ul>

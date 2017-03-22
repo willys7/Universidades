@@ -1,14 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
-from dashboard.models import Curso, Alumno
+from dashboard.models import Curso, Alumno, Profesor
 
 from django.http import HttpResponse
 from django.views.generic import TemplateView,ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 
-from dashboard.forms import CursoForm, AlumnoForm
+from dashboard.forms import CursoForm, AlumnoForm, ProfesorForm
 
 #CRUD CURSO
 def CursoList(request):
@@ -149,22 +149,102 @@ def AlumnoEdit(request, alumno_codigo):
 	        'message': message
 	    }
 	)
-def AlumnoDelete(request, curso_codigo):
-	curso = Curso.objects.get(codigo=curso_codigo)
+def AlumnoDelete(request, alumno_codigo):
+	alumnos = Alumno.objects.get(carnet=alumno_codigo)
 	menssage = ''
-	if(curso != None ):
-		message = 'Se ha eliminiado el curso'
-		Curso.objects.get(codigo=curso_codigo).delete()
+	if(alumnos != None ):
+		message = 'Se ha eliminiado el alumno'
+		Alumno.objects.get(carnet=alumno_codigo).delete()
 	else:
-		message = 'No se ha eliminiado el curso'
+		message = 'No se ha eliminiado el alumno'
 
-	cursos = Curso.objects.all()
+	alumnos = Alumno.objects.all()
 
 	return render(
         request,
-        'dashboard/curso_list.html',
+        'dashboard/alumno_list.html',
         {
-            'cursos': cursos,
+            'alumnos': alumnos,
+            'message': message
+        }
+    )
+
+#CRUD PROFESOR
+
+def ProfesorList(request):
+
+    profesor = Profesor.objects.all()
+
+    return render(
+        request,
+        'dashboard/profesor_list.html',
+        {
+            'profesor': profesor
+        }
+    )
+
+def ProfesorNew(request):
+	profesor_form = ProfesorForm()
+	if request.method == 'GET':
+	    profesor_form = ProfesorForm()
+	elif request.method == 'POST':
+	    profesor_form = ProfesorForm(data=request.POST)
+	    if profesor_form.is_valid():
+	        profesor_form.save()
+	        profesor_form = ProfesorForm()
+
+
+	return render(
+	    request,
+	    'dashboard/profesor_form.html',
+	    {
+	        'profesor_form': profesor_form
+	    }
+	)
+
+def ProfesorEdit(request, profesor_codigo):
+	profesor = Profesor.objects.get(username=profesor_codigo)
+	message = ''
+	if request.method == 'GET':
+	    profesor_form = ProfesorForm(instance=profesor)
+
+	elif request.method == 'POST':
+	    profesor_form = ProfesorForm(request.POST)
+	    message = "Profesor exitosamente guardado"
+	    Profesor.objects.get(username=profesor_codigo).delete()
+	    if profesor_form.is_valid():
+	        profesor.nombre = profesor_form.instance.nombre
+	        profesor.edad = profesor_form.instance.edad
+	        profesor.username = profesor_form.instance.username
+	        profesor.save()
+	        print profesor
+	else:
+	    pass
+
+	return render(
+	    request,
+	    'dashboard/profesor_form.html',
+	    {
+	        'profesor_form': profesor_form,
+	        'message': message
+	    }
+	)
+def ProfesorDelete(request, profesor_codigo):
+	profesor = Profesor.objects.get(username=profesor_codigo)
+	menssage = ''
+	if(profesor != None ):
+		message = 'Se ha eliminiado el profesor'
+		Profesor.objects.get(username=profesor_codigo).delete()
+	else:
+		message = 'No se ha eliminiado el profesor'
+
+	profesor = Profesor.objects.all()
+
+	return render(
+        request,
+        'dashboard/profesor_list.html',
+        {
+            'profesor': profesor,
             'message': message
         }
     )

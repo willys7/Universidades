@@ -1,0 +1,12 @@
+<h1>Profesores</h1>
+<ul>
+    {% for prof in profesor %}
+    <li>{{ prof.nombre }}  ({{ prof.edad }} Edad) ({{ prof.username }} user) 
+    <a href="{% url 'dashboard:profesor_edit' prof.username %}">Editar</a>
+    <a href="{% url 'dashboard:profesor_delete' prof.username %}">Eliminar</a>
+    </li>
+    {% endfor %}
+    <p><strong>{{ message }}</strong></p>
+</ul>
+
+<a href="{% url 'dashboard:profesor_new' %}">New</a>

@@ -11,4 +11,10 @@ class AlumnoForm(forms.ModelForm):
         model = Alumno
         fields = ('nombre', 'carnet', 'edad','carrera')
 
+class ProfesorForm(forms.ModelForm):
+    class Meta:
+        model = Profesor
+        fields = ('nombre', 'edad', 'username')
+
+
 
