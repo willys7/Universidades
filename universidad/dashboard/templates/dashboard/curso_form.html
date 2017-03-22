@@ -1,4 +1,8 @@
 <form method="post">{% csrf_token %}
     {{ curso_form }}
     <input type="submit" value="Submit" />
+
+    <p><strong>{{ message }}</strong></p>
 </form>
+
+<a href="{% url 'dashboard:curso_list' %}">Home</a>

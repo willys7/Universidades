@@ -11,10 +11,4 @@ class AlumnoForm(forms.ModelForm):
         model = Alumno
         fields = ('cursos', 'nombre', 'carnet', 'edad','carrera')
 
-class ProfesorForm(forms.ModelForm):
-	cursos = forms.MultipleChoiceField(
-		widget=forms.widgets.CheckboxSelectMultiple(), 
-		required=False)
-	class Meta:
-		model = Profesor
-		fields = ('username', 'nombre', 'edad', 'cursos')
+

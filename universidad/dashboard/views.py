@@ -8,7 +8,7 @@ from django.views.generic import TemplateView,ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 
-from dashboard.forms import CursoForm, AlumnoForm, ProfesorForm
+from dashboard.forms import CursoForm, AlumnoForm
 
 
 def CursoList(request):
@@ -42,23 +42,49 @@ def CursoNew(request):
 	    }
 	)
 
-#def CursoEdit(request, codigo):
-
-def ProfesorNew(request):
-	add_profesor = ProfesorForm()
+def CursoEdit(request, curso_codigo):
+	curso = Curso.objects.get(codigo=curso_codigo)
+	message = ''
 	if request.method == 'GET':
-	    add_profesor = ProfesorForm()
-	elif request.method == 'POST':
-	    add_profesor = ProfesorForm(data=request.POST)
-	    if add_profesor.is_valid():
-	        add_profesor.save()
-	        add_profesor = ProfesorForm()
+	    curso_form = CursoForm(instance=curso)
 
+	elif request.method == 'POST':
+	    curso_form = CursoForm(request.POST)
+	    message = "Persona exitosamente guardada"
+	    Curso.objects.get(codigo=curso_codigo).delete()
+	    if curso_form.is_valid():
+	        curso.nombre = curso_form.instance.nombre
+	        curso.numero_alumnos = curso_form.instance.numero_alumnos
+	        curso.codigo = curso_form.instance.codigo
+	        curso.save()
+	        print curso
+	else:
+	    pass
 
 	return render(
 	    request,
-	    'dashboard/add_profesor.html',
+	    'dashboard/curso_form.html',
 	    {
-	        'add_profesor': add_profesor
+	        'curso_form': curso_form,
+	        'message': message
 	    }
 	)
+def CursoDelete(request, curso_codigo):
+	curso = Curso.objects.get(codigo=curso_codigo)
+	menssage = ''
+	if(curso != None ):
+		message = 'Se ha eliminiado el curso'
+		Curso.objects.get(codigo=curso_codigo).delete()
+	else:
+		message = 'No se ha eliminiado el curso'
+
+	cursos = Curso.objects.all()
+
+	return render(
+        request,
+        'dashboard/curso_list.html',
+        {
+            'cursos': cursos,
+            'message': message
+        }
+    )

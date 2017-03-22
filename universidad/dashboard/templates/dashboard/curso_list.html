@@ -1,9 +1,12 @@
-<h1>Books CBV</h1>
+<h1>Cursos</h1>
 <ul>
     {% for curso in cursos %}
     <li>{{ curso.nombre }}  ({{ curso.numero_alumnos }} No.Alumnos) ({{ curso.fecha }} fecha) ({{ curso.codigo }} codigo)
+    <a href="{% url 'dashboard:curso_edit' curso.codigo %}">Editar</a>
+    <a href="{% url 'dashboard:curso_delete' curso.codigo %}">Eliminar</a>
     </li>
     {% endfor %}
+    <p><strong>{{ message }}</strong></p>
 </ul>
 
 <a href="{% url 'dashboard:curso_new' %}">New</a>
