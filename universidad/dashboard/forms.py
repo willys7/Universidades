@@ -9,6 +9,6 @@ class CursoForm(forms.ModelForm):
 class AlumnoForm(forms.ModelForm):
     class Meta:
         model = Alumno
-        fields = ('cursos', 'nombre', 'carnet', 'edad','carrera')
+        fields = ('nombre', 'carnet', 'edad','carrera')
 
 

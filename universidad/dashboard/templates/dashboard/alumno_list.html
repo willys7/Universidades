@@ -1,11 +1,11 @@
-<h1>Books CBV</h1>
+<h1>Alumno</h1>
 <ul>
-    {% for alumno in object_list %}
-    <li>{{ alumno.nombre }} ({{ alumno.carnet }} carnet) ({{ alumno.edad }} edad) ({{ alumno.curso}} curso)  ({{ alumno.carrera }} carrera)
-    <a href="{% url 'dashboard:alumno_edit' alumno.id %}">edit</a>
-    <a href="{% url 'dashboard:alumno_delete' alumno.id %}">delete</a>
+    {% for alumno in alumnos %}
+    <li>{{ alumno.nombre }} ({{ alumno.carnet }} carnet) ({{ alumno.edad }} edad) ({{ alumno.carrera }} carrera)
+    <a href="{% url 'dashboard:alumno_edit' alumno.carnet %}">Editar</a>
+    
     </li>
     {% endfor %}
 </ul>
 
-<a href="{% url 'dashboard:alumno_new' %}">New</a>
+<a href="{% url 'dashboard:alumno_new' %}">Nuevo</a>

@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from dashboard.forms import CursoForm, AlumnoForm
 
-
+#CRUD CURSO
 def CursoList(request):
 
     cursos = Curso.objects.all()
@@ -70,6 +70,86 @@ def CursoEdit(request, curso_codigo):
 	    }
 	)
 def CursoDelete(request, curso_codigo):
+	curso = Curso.objects.get(codigo=curso_codigo)
+	menssage = ''
+	if(curso != None ):
+		message = 'Se ha eliminiado el curso'
+		Curso.objects.get(codigo=curso_codigo).delete()
+	else:
+		message = 'No se ha eliminiado el curso'
+
+	cursos = Curso.objects.all()
+
+	return render(
+        request,
+        'dashboard/curso_list.html',
+        {
+            'cursos': cursos,
+            'message': message
+        }
+    )
+
+#CRUD Alumno
+def AlumnoList(request):
+
+    alumnos = Alumno.objects.all()
+
+    return render(
+        request,
+        'dashboard/alumno_list.html',
+        {
+            'alumnos': alumnos
+        }
+    )
+
+def AlumnoNew(request):
+	alumno_form = AlumnoForm()
+	if request.method == 'GET':
+	    alumno_form = AlumnoForm()
+	elif request.method == 'POST':
+	    alumno_form = AlumnoForm(data=request.POST)
+	    if alumno_form.is_valid():
+	        alumno_form.save()
+	        alumno_form = AlumnoForm()
+
+
+	return render(
+	    request,
+	    'dashboard/alumno_form.html',
+	    {
+	        'alumno_form': alumno_form
+	    }
+	)
+
+def AlumnoEdit(request, alumno_codigo):
+	alumno = Alumno.objects.get(carnet=alumno_codigo)
+	message = ''
+	if request.method == 'GET':
+	    alumno_form = AlumnoForm(instance=alumno)
+
+	elif request.method == 'POST':
+	    alumno_form = AlumnoForm(request.POST)
+	    message = "Alumno exitosamente guardado"
+	    Alumno.objects.get(carnet=alumno_codigo).delete()
+	    if alumno_form.is_valid():
+	        alumno.nombre = alumno_form.instance.nombre
+	        alumno.carnet = alumno_form.instance.carnet
+	        alumno.edad = alumno_form.instance.edad
+	        alumno.carrera = alumno_form.instance.carrera
+	        alumno.save()
+	        print alumno
+	else:
+	    pass
+
+	return render(
+	    request,
+	    'dashboard/alumno_form.html',
+	    {
+	        'alumno_form': alumno_form,
+	        'message': message
+	    }
+	)
+def AlumnoDelete(request, curso_codigo):
 	curso = Curso.objects.get(codigo=curso_codigo)
 	menssage = ''
 	if(curso != None ):
