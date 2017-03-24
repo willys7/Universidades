@@ -1,0 +1,12 @@
+<h1>Clases</h1>
+<ul>
+    {% for clase in clases %}
+    <li>{{ clase.curso.nombre }} (profe: {{ clase.profesor.nombre }})
+    <a href="{% url 'dashboard:clase_edit' clase.seccion %}">Editar</a>
+    <a href="{% url 'dashboard:clase_delete' clase.seccion %}">Eliminar</a>
+    <a href="{% url 'dashboard:clase_alumnos_list' clase.seccion %}">Listar Alumnos</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'dashboard:clase_new' %}">Nuevo</a>

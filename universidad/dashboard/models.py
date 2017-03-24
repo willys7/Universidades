@@ -32,3 +32,10 @@ class Profesor(models.Model):
 	username = models.CharField(max_length=255, unique=True)
 	def __unicode__(self):
 		return '{} {} {}'.format(self.username, self.nombre, self.edad)
+
+class Clase(models.Model):
+	seccion = models.CharField(max_length=255, unique=True)
+	profesor = EmbedOverrideField('Profesor')
+	curso = EmbedOverrideField('Curso')
+	estudiantes = ListField(EmbeddedModelField('Alumno'))
+

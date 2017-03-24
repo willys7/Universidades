@@ -16,5 +16,13 @@ class ProfesorForm(forms.ModelForm):
         model = Profesor
         fields = ('nombre', 'edad', 'username')
 
+class ClaseForm(forms.Form):
+	profesor = forms.CharField()
+	curso = forms.CharField()
+	estudiantes = forms.CharField()
 
-
+class ClaseEditForm(forms.Form):
+	seccion = forms.CharField()
+	profesor = forms.CharField()
+	curso = forms.CharField()
+	estudiantes = forms.CharField()

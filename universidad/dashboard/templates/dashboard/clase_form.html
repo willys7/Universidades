@@ -1,0 +1,6 @@
+<form method="post">{% csrf_token %}
+    {{ clase_form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+
+<a href="{% url 'dashboard:clase_list' %}">Home</a>

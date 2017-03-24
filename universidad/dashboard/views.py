@@ -1,14 +1,16 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
-from dashboard.models import Curso, Alumno, Profesor
+from dashboard.models import Curso, Alumno, Profesor, Clase
 
 from django.http import HttpResponse
 from django.views.generic import TemplateView,ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 
-from dashboard.forms import CursoForm, AlumnoForm, ProfesorForm
+import simplejson as json
+
+from dashboard.forms import CursoForm, AlumnoForm, ProfesorForm, ClaseForm, ClaseEditForm
 
 #CRUD CURSO
 def CursoList(request):
@@ -248,3 +250,138 @@ def ProfesorDelete(request, profesor_codigo):
             'message': message
         }
     )
+
+def ClaseList(request):
+
+    clases = Clase.objects.all()
+
+    return render(
+        request,
+        'dashboard/clase_list.html',
+        {
+            'clases': clases
+        }
+    )
+
+def ClaseAlumnoList(request, seccion):
+
+    clase = Clase.objects.get(seccion=seccion)
+
+    return render(
+        request,
+        'dashboard/clase_alumnos_list.html',
+        {
+            'clase': clase,
+            'alumnos': clase.estudiantes
+        }
+    )
+
+def ClaseNew(request):
+	clase_form = ClaseForm()
+	if request.method == 'GET':
+	    clase_form = ClaseForm()
+	elif request.method == 'POST':
+	    clase_form = ClaseForm(data=request.POST)
+	    if clase_form.is_valid():
+	    	profesor = clase_form.cleaned_data['profesor']
+	    	curso = clase_form.cleaned_data['curso']
+	    	carnets = clase_form.cleaned_data['estudiantes']
+	    	print(profesor, curso)
+	    	curso = Curso.objects.get(codigo=curso)
+	    	profesor = Profesor.objects.get(username=profesor)
+	    	print(profesor, curso)
+
+	    	carnets = carnets.split(',')
+	    	listEstudiantes = []
+	    	for i in carnets:
+	    		alumno = Alumno.objects.get(carnet=i.strip())
+	    		print(alumno)
+	    		listEstudiantes.append(alumno)
+
+	    	print(listEstudiantes)
+
+	    	seccion = curso.nombre + str(len(Clase.objects.all()))
+	    	clase = Clase(curso=curso, profesor=profesor, seccion=seccion, estudiantes=listEstudiantes)
+	    	print(clase)
+	    	clase.save()
+	    	clase_form = ClaseForm()
+
+
+	return render(
+	    request,
+	    'dashboard/clase_form.html',
+	    {
+	        'clase_form': clase_form
+	    }
+	)
+
+def ClaseDelete(request, seccion):
+	profesor = Clase.objects.get(seccion=seccion)
+	menssage = ''
+	if(clase != None ):
+		message = 'Se ha eliminiado el clase'
+		Clase.objects.get(seccion=seccion).delete()
+	else:
+		message = 'No se ha eliminiado el clase'
+
+	clases = Clase.objects.all()
+
+	return render(
+        request,
+        'dashboard/clase_list.html',
+        {
+            'clases': clases,
+            'message': message
+        }
+    )
+
+def ClaseEdit(request, seccion):
+	clase = Clase.objects.get(seccion=seccion)
+	message = ''
+	if request.method == 'GET':
+		estudiantes = ''
+		h = 0
+		for i in clase.estudiantes:
+			print(i)
+			estudiantes += str(i.carnet)
+			h += 1
+			if not (h == len(clase.estudiantes)):
+				estudiantes += ','
+		print(estudiantes)
+		data = {'seccion':clase.seccion, 'curso': clase.curso.codigo, 'profesor': clase.profesor.username, 'estudiantes':estudiantes}
+		clase_form = ClaseEditForm(initial=data)
+	elif request.method == 'POST':
+	    clase_form = ClaseEditForm(request.POST)
+	    message = "Clase exitosamente guardado"
+	    Clase.objects.get(seccion=seccion).delete()
+	    if clase_form.is_valid():
+	    	profesor = clase_form.cleaned_data['profesor']
+	    	curso = clase_form.cleaned_data['curso']
+	    	seccion = clase_form.cleaned_data['seccion']
+	    	carnets = clase_form.cleaned_data['estudiantes']
+	    	print(profesor, curso)
+	    	curso = Curso.objects.get(codigo=curso)
+	    	profesor = Profesor.objects.get(username=profesor)
+	    	print(profesor, curso)
+
+	    	carnets = carnets.split(',')
+	    	listEstudiantes = []
+	    	for i in carnets:
+	    		alumno = Alumno.objects.get(carnet=i.strip())
+	    		print(alumno)
+	    		listEstudiantes.append(alumno)
+
+	    	print(listEstudiantes)
+	    	clase = Clase(curso=curso, profesor=profesor, seccion=seccion, estudiantes=listEstudiantes)
+	    	clase.save()
+	else:
+	    pass
+
+	return render(
+	    request,
+	    'dashboard/clase_form.html',
+	    {
+	        'clase_form': clase_form,
+	        'message': message
+	    }
+	)

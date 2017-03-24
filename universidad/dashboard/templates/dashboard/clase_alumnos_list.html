@@ -1,0 +1,9 @@
+<h1>Alumnos en clase {{clase.nombre}} - seccion: {{clase.seccion}}</h1>
+<ul>
+    {% for alumno in alumnos %}
+    <li>{{ alumno.nombre }} ({{ alumno.carnet }} carnet) ({{ alumno.edad }} edad) ({{ alumno.carrera }} carrera)
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'dashboard:clase_list' %}">Home</a>
